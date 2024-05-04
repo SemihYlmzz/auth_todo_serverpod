@@ -1,2 +1,7 @@
 example:
   - hello:
+todo:
+  - readTodoById:
+  - readAllTodo:
+user:
+  - readUser:

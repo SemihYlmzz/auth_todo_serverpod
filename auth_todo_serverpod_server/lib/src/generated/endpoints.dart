@@ -10,6 +10,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/example_endpoint.dart' as _i2;
+import '../endpoints/todo_endpoint.dart' as _i3;
+import '../endpoints/user_endpoint.dart' as _i4;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -20,7 +22,19 @@ class Endpoints extends _i1.EndpointDispatch {
           server,
           'example',
           null,
-        )
+        ),
+      'todo': _i3.TodoEndpoint()
+        ..initialize(
+          server,
+          'todo',
+          null,
+        ),
+      'user': _i4.UserEndpoint()
+        ..initialize(
+          server,
+          'user',
+          null,
+        ),
     };
     connectors['example'] = _i1.EndpointConnector(
       name: 'example',
@@ -42,6 +56,63 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['example'] as _i2.ExampleEndpoint).hello(
             session,
             params['name'],
+          ),
+        )
+      },
+    );
+    connectors['todo'] = _i1.EndpointConnector(
+      name: 'todo',
+      endpoint: endpoints['todo']!,
+      methodConnectors: {
+        'readTodoById': _i1.MethodConnector(
+          name: 'readTodoById',
+          params: {
+            'todoId': _i1.ParameterDescription(
+              name: 'todoId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['todo'] as _i3.TodoEndpoint).readTodoById(
+            session,
+            params['todoId'],
+          ),
+        ),
+        'readAllTodo': _i1.MethodConnector(
+          name: 'readAllTodo',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['todo'] as _i3.TodoEndpoint).readAllTodo(session),
+        ),
+      },
+    );
+    connectors['user'] = _i1.EndpointConnector(
+      name: 'user',
+      endpoint: endpoints['user']!,
+      methodConnectors: {
+        'readUser': _i1.MethodConnector(
+          name: 'readUser',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['user'] as _i4.UserEndpoint).readUser(
+            session,
+            params['userId'],
           ),
         )
       },
