@@ -11,10 +11,11 @@ library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixe
 
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'example.dart' as _i3;
-import 'todo.dart' as _i4;
-import 'user.dart' as _i5;
-import 'package:auth_todo_serverpod_server/src/generated/todo.dart' as _i6;
+import 'package:serverpod_auth_server/module.dart' as _i3;
+import 'example.dart' as _i4;
+import 'todo.dart' as _i5;
+import 'user.dart' as _i6;
+import 'package:auth_todo_serverpod_server/src/generated/todo.dart' as _i7;
 export 'example.dart';
 export 'todo.dart';
 export 'user.dart';
@@ -117,6 +118,7 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    ..._i3.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
   ];
 
@@ -129,28 +131,31 @@ class Protocol extends _i1.SerializationManagerServer {
     if (customConstructors.containsKey(t)) {
       return customConstructors[t]!(data, this) as T;
     }
-    if (t == _i3.Example) {
-      return _i3.Example.fromJson(data, this) as T;
+    if (t == _i4.Example) {
+      return _i4.Example.fromJson(data, this) as T;
     }
-    if (t == _i4.Todo) {
-      return _i4.Todo.fromJson(data, this) as T;
+    if (t == _i5.Todo) {
+      return _i5.Todo.fromJson(data, this) as T;
     }
-    if (t == _i5.User) {
-      return _i5.User.fromJson(data, this) as T;
+    if (t == _i6.User) {
+      return _i6.User.fromJson(data, this) as T;
     }
-    if (t == _i1.getType<_i3.Example?>()) {
-      return (data != null ? _i3.Example.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i4.Example?>()) {
+      return (data != null ? _i4.Example.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i4.Todo?>()) {
-      return (data != null ? _i4.Todo.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i5.Todo?>()) {
+      return (data != null ? _i5.Todo.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i5.User?>()) {
-      return (data != null ? _i5.User.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i6.User?>()) {
+      return (data != null ? _i6.User.fromJson(data, this) : null) as T;
     }
-    if (t == List<_i6.Todo>) {
-      return (data as List).map((e) => deserialize<_i6.Todo>(e)).toList()
+    if (t == List<_i7.Todo>) {
+      return (data as List).map((e) => deserialize<_i7.Todo>(e)).toList()
           as dynamic;
     }
+    try {
+      return _i3.Protocol().deserialize<T>(data, t);
+    } catch (_) {}
     try {
       return _i2.Protocol().deserialize<T>(data, t);
     } catch (_) {}
@@ -159,13 +164,18 @@ class Protocol extends _i1.SerializationManagerServer {
 
   @override
   String? getClassNameForObject(Object data) {
-    if (data is _i3.Example) {
+    String? className;
+    className = _i3.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth.$className';
+    }
+    if (data is _i4.Example) {
       return 'Example';
     }
-    if (data is _i4.Todo) {
+    if (data is _i5.Todo) {
       return 'Todo';
     }
-    if (data is _i5.User) {
+    if (data is _i6.User) {
       return 'User';
     }
     return super.getClassNameForObject(data);
@@ -173,14 +183,18 @@ class Protocol extends _i1.SerializationManagerServer {
 
   @override
   dynamic deserializeByClassName(Map<String, dynamic> data) {
+    if (data['className'].startsWith('serverpod_auth.')) {
+      data['className'] = data['className'].substring(15);
+      return _i3.Protocol().deserializeByClassName(data);
+    }
     if (data['className'] == 'Example') {
-      return deserialize<_i3.Example>(data['data']);
+      return deserialize<_i4.Example>(data['data']);
     }
     if (data['className'] == 'Todo') {
-      return deserialize<_i4.Todo>(data['data']);
+      return deserialize<_i5.Todo>(data['data']);
     }
     if (data['className'] == 'User') {
-      return deserialize<_i5.User>(data['data']);
+      return deserialize<_i6.User>(data['data']);
     }
     return super.deserializeByClassName(data);
   }
@@ -188,16 +202,22 @@ class Protocol extends _i1.SerializationManagerServer {
   @override
   _i1.Table? getTableForType(Type t) {
     {
+      var table = _i3.Protocol().getTableForType(t);
+      if (table != null) {
+        return table;
+      }
+    }
+    {
       var table = _i2.Protocol().getTableForType(t);
       if (table != null) {
         return table;
       }
     }
     switch (t) {
-      case _i4.Todo:
-        return _i4.Todo.t;
-      case _i5.User:
-        return _i5.User.t;
+      case _i5.Todo:
+        return _i5.Todo.t;
+      case _i6.User:
+        return _i6.User.t;
     }
     return null;
   }

@@ -14,6 +14,7 @@ import 'example.dart' as _i2;
 import 'todo.dart' as _i3;
 import 'user.dart' as _i4;
 import 'package:auth_todo_serverpod_client/src/protocol/todo.dart' as _i5;
+import 'package:serverpod_auth_client/module.dart' as _i6;
 export 'example.dart';
 export 'todo.dart';
 export 'user.dart';
@@ -59,11 +60,19 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i5.Todo>(e)).toList()
           as dynamic;
     }
+    try {
+      return _i6.Protocol().deserialize<T>(data, t);
+    } catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
   @override
   String? getClassNameForObject(Object data) {
+    String? className;
+    className = _i6.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth.$className';
+    }
     if (data is _i2.Example) {
       return 'Example';
     }
@@ -78,6 +87,10 @@ class Protocol extends _i1.SerializationManager {
 
   @override
   dynamic deserializeByClassName(Map<String, dynamic> data) {
+    if (data['className'].startsWith('serverpod_auth.')) {
+      data['className'] = data['className'].substring(15);
+      return _i6.Protocol().deserializeByClassName(data);
+    }
     if (data['className'] == 'Example') {
       return deserialize<_i2.Example>(data['data']);
     }
